@@ -1,71 +1,106 @@
-import guitar from '../guitar.png'
-import google from '../google.png'
-import phone from '../phone.png'
-import { signInWithPopup } from 'firebase/auth'
-import { auth, googleProvider } from '../../firebase/setup'
+// import guitar from '../guitar.png';
+// import google from '../google.png';
+// import phone from '../phone.png';
+import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, googleProvider } from '../../firebase/setup';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+// type PopupProp = {
+//   setLoginPop: any;
+// };
 
-type popupProp = {
-  setLoginPop: any
-}
+const Login = () => {
+  const navigate = useNavigate();
+  const [authing, setAuthing] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-const Login = (props:popupProp) => {
-
-  const googleSignin = async() => {
-    try{
-          await signInWithPopup(auth, googleProvider)
-    }catch(err){
+  const signInWithGoogle = async () => {
+    setAuthing(true);
+    try {
+      const response = await signInWithPopup(auth, googleProvider);
+      console.log(response.user.uid);
+      navigate('/');
+    } catch (err) {
       console.error(err);
+      setAuthing(false);
     }
-    
-  }
+  };
+
+  const signInWithEmail = async () => {
+    setAuthing(true);
+    setError('');
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response.user.uid);
+      navigate('/');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message);
+      setAuthing(false);
+    }
+  };
 
   return (
-    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  
-  
-  <div className="fixed inset-0 bg-zinc-950 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-
-  <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-      
-      
-      <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all  sm:w-96 sm:max-w-lg">
-        <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-          <h1 onClick={()=> props?.setLoginPop(false)} className='cursor-pointer font-semibold text-3xl'>X</h1>
-          <div className="sm:flex sm:items-start">
-            
-            
-            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-              
-              <div className="mt-2">
-                <img src={guitar} className='w-20 h-20 ml-32' />
-                <p className="text-base font-medium mt-28 text-center">Help us to become one of the safest places<br/> to buy and sell</p>
-                
-                <div className='flex border-2 border-black p-2 rounded-md mt-12'>
-                    <img src={phone} className='w-6 h-6' />
-                    <h1 className='font-semibold ml-3'>Continue with phone</h1>
-                </div>
-
-                <div onClick={googleSignin} className='flex border-2 border-gray-300 p-2 rounded-md mt-4'>
-                    <img src={google} className='w-6 h-6' />
-                    <h1 className='font-semibold ml-12'>Continue with Google</h1>
-                </div>
-                <h1 className='text-center mt-4 cursor-pointer'>OR</h1>
-                <h1 className='text-center mt-36 underline cursor-pointer'>Login with Email</h1>
-                <h1 className='text-center mt-4 text-xs' >ALl your personel details are safe with us.</h1>
-                <h1 className='text-center mt-4 text-xs'>If you continue, you are accepting<span className='text-blue-600'> OLX Terms and<br/> Conditions and Privacy Policy</span> </h1>
-              </div>
-            </div>
+    <div className="w-full h-screen flex">
+      <div className="w-1/2 h-full flex flex-col bg-[#282c34] items-center justify-center"></div>
+      <div className="w-1/2 h-full bg-[#1a1a1a] flex flex-col p-20 justify-center">
+        <div className="w-full flex flex-col max-w-[450px] mx-auto">
+          <div className="w-full flex flex-col mb-10 text-white">
+            <h3 className="text-4xl font-bold mb-2">Login</h3>
+            <p className="text-lg mb-4">Welcome Back! Please enter your details.</p>
           </div>
+          <div className="w-full flex flex-col mb-6">
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="w-full flex flex-col mb-4">
+            <button
+              className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
+              onClick={signInWithEmail}
+              disabled={authing}
+            >
+              Log In With Email and Password
+            </button>
+          </div>
+          {error && <div className="text-red-500 mb-4">{error}</div>}
+          <div className="w-full flex items-center justify-center relative py-4">
+            <div className="w-full h-[1px] bg-gray-500"></div>
+            <p className="text-lg absolute text-gray-500 bg-[#1a1a1a] px-2">OR</p>
+          </div>
+          <button
+            className="w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7"
+            onClick={signInWithGoogle}
+            disabled={authing}
+          >
+            Log In With Google
+          </button>
         </div>
-        
+        <div className="w-full flex items-center justify-center mt-10">
+          <p className="text-sm font-normal text-gray-400">
+            Don't have an account?{' '}
+            <span className="font-semibold text-white cursor-pointer underline">
+              <a href="/signup">Sign Up</a>
+            </span>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  );
+};
 
-  )
-}
-
-export default Login
+export default Login;
