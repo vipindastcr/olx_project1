@@ -1,7 +1,7 @@
   import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'; // Import Firestore
-import AuthRoute from '../assets/components/authRoute';
+// import AuthRoute from '../assets/components/authRoute';
 
   const firebaseConfig = {
     apiKey: "AIzaSyDvIaLKuVC7K-BJN6zEj-sHPb1dCT4i_8E",
