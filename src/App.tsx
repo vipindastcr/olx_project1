@@ -5,6 +5,9 @@ import SignUp from "./assets/components/signup"
 // import Navbar from "./assets/components/Navbar"
 import { Route, Routes } from "react-router-dom"
 import AuthRoute from "./assets/components/authRoute"
+import CreateP from "./assets/components/create"
+
+
 
 
 const App = () => {
@@ -15,6 +18,7 @@ const App = () => {
         <Route path="/details" element={ <Details/> }/>
         <Route path="/login" element={ <Login/> } />
         <Route path="/SignUp" element={ <SignUp/> } />
+        <Route path="/sell" element={<CreateP/> }/>
       </Routes>
       
     </>

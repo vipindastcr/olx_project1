@@ -1,13 +1,16 @@
 import { useState } from "react"
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const SignUp=() => {
 
     const auth = getAuth()
+    const firestore = getFirestore();
     const navigate = useNavigate()
 
     const [authing, setAuthing] = useState(false)
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -19,10 +22,20 @@ const SignUp=() => {
 
         // use firebase to signup with google
         signInWithPopup(auth, new GoogleAuthProvider())
-            .then(response=>{
-                console.log(response.user.uid);
-                navigate('/')
-            })
+        .then(async (response) => {
+            const user = response.user;
+
+            // Add user details to Firestore
+            await setDoc(doc(firestore, 'users', user.uid), {
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                createdAt: new Date(),
+            });
+
+            navigate('/');
+        })
 
             .catch(error=>{
                 console.log(error);
@@ -42,9 +55,18 @@ const SignUp=() => {
 
 
         createUserWithEmailAndPassword(auth, email, password)
-                .then(response=>{
-                    console.log(response.user.uid);
-                    navigate('/')
+                .then(async (response) => {
+                    const user = response.user;
+
+                    // Add user details to Firestore
+                    await setDoc(doc(firestore, 'users', user.uid), {
+                        uid: user.uid,
+                        name: name, // Include name here
+                        email: user.email,
+                        createdAt: new Date(),
+                    });
+
+                    navigate('/login');
                 })
                 .catch(error=>{
                     console.log(error);
@@ -67,6 +89,15 @@ const SignUp=() => {
                 </div>
 
                 <div className="w-full flex flex-col mb-6">
+                    
+                    <input type="name"
+                            placeholder="Name"
+                            value={name}
+                            onChange={(e)=>setName(e.target.value)}
+                            className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
+                    />
+
+
                     <input type="email"
                         placeholder="Email"
                         value={email}

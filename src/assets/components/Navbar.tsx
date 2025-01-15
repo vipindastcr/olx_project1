@@ -3,19 +3,65 @@ import olx from '../olx.png'
 import lens from '../lens.png'
 import arrow from '../arrow.png'
 import search from '../search.png'
-import Login from './Login'
-// import { useState } from 'react'
 
-// import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { auth, db } from "../../firebase/setup";
 
 
 type searchProp = {
-  setSearch: any
-}
+  setSearch: (value: string) => void;
+};
 
 const Navbar = ( props: searchProp) => {
 
-  // const [loginPop, setLoginPop] = useState(false)
+  
+  const [user, setUser] = useState<any>(null); // To store the authenticated user's details
+  const [userName, setUserName] = useState<string>(""); // To store the user's name
+  const navigate = useNavigate(); // Initialize useNavigate
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+
+        // Fetch user data from Firestore
+        try {
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            setUserName(userDoc.data().name); // Set the user's name
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        setUser(null);
+        setUserName(""); // Clear the user's name on logout
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup listener on component unmount
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  const handleSellClick = () => {
+    navigate("/create"); // Navigate to the /create route
+  };
 
   return (
     
@@ -38,14 +84,33 @@ const Navbar = ( props: searchProp) => {
         <img src={arrow} className='w-8 h-7'/>
       </div>
 
+      {user ? (
+        <div className="flex items-center space-x-4 ml-6">
+          <h1 className="font-bold text-lg">Hello, {userName || "User"}</h1>
+          <button
+            onClick={handleLogout}
+            className="font-semibold text-red-500 underline hover:no-underline"
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <a
+          href="/login"
+          className="flex h-12 p-3 ml-6 cursor-pointer underline hover:no-underline"
+        >
+          <h1 className="font-bold text-lg">Login</h1>
+        </a>
+      )}
+{/* 
       <div className='flex h-12 p-3 ml-4 cursor-pointer underline hover:no-underline'>
-  <a href="/login" className='font-bold text-lg'>login</a>
-</div>
+        <a href="/login" className='font-bold text-lg'>login</a>
+      </div> */}
 
-      
+      <a href="/sell">
       <div className='w-28 flex h-12 p-2 ml-4 cursor-pointer rounded-full border border-yellow-500'>
         <h1 className='font-bold text-lg ml-3'>+SELL</h1>
-      </div>
+      </div></a>
     </div>
     {/* { loginPop && <Login   setLoginPop = { setLoginPop}/>  } */}
     </>

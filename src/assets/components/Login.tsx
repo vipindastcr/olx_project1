@@ -17,6 +17,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  // const [name, setName] = useState("");
+  // const { login } = useAuth();
+  
+
   const signInWithGoogle = async () => {
     setAuthing(true);
     try {
