@@ -6,6 +6,7 @@ import SignUp from "./assets/components/signup"
 import { Route, Routes } from "react-router-dom"
 import AuthRoute from "./assets/components/authRoute"
 import CreateP from "./assets/components/create"
+import ProductDetails from "./assets/components/productDetail"
 
 
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/login" element={ <Login/> } />
         <Route path="/SignUp" element={ <SignUp/> } />
         <Route path="/sell" element={<CreateP/> }/>
+        <Route path="/product/:id" element={ <ProductDetails/>}/>
       </Routes>
       
     </>

@@ -178,6 +178,7 @@
 import React, { useState } from "react";
 import { db } from "../../firebase/setup";
 import { collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const CreateP = () => {
     const [name, setName] = useState<string>("");
@@ -187,6 +188,8 @@ const CreateP = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
+    const navigate = useNavigate()
+
 
     const CLOUD_NAME = "dqowwseyq";
     const UPLOAD_PRESET = "olx_clone";
@@ -237,6 +240,8 @@ const CreateP = () => {
 
             await addDoc(collection(db, "products"), product);
             console.log("Product submitted:", product);
+
+            navigate('/')
 
             setError(null);
             setSuccess(true);
