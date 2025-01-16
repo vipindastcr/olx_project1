@@ -1,12 +1,12 @@
-import Details from "./assets/components/Details"
-import Login from "./assets/components/Login"
-import Main from "./assets/components/Main"
-import SignUp from "./assets/components/signup"
+import Details from "./components/Details"
+import Login from "./components/Login"
+import Main from "./components/Main"
+import SignUp from "./components/signup"
 // import Navbar from "./assets/components/Navbar"
 import { Route, Routes } from "react-router-dom"
-import AuthRoute from "./assets/components/authRoute"
-import CreateP from "./assets/components/create"
-import ProductDetails from "./assets/components/productDetail"
+import AuthRoute from "./components/authRoute"
+import CreateP from "./components/create"
+import ProductDetails from "./components/productDetail"
 
 
 

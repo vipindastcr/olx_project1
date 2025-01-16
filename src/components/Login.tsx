@@ -2,7 +2,7 @@
 // import google from '../google.png';
 // import phone from '../phone.png';
 import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, googleProvider } from '../../firebase/setup';
+import { auth, googleProvider } from '../firebase/setup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

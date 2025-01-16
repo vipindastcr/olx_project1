@@ -1,14 +1,14 @@
 
-import olx from '../olx.png'
-import lens from '../lens.png'
-import arrow from '../arrow.png'
-import search from '../search.png'
+import olx from '../assets/olx.png'
+import lens from '../assets/lens.png'
+import arrow from '../assets/arrow.png'
+import search from '../assets/search.png'
 
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { auth, db } from "../../firebase/setup";
+import { auth, db } from "../firebase/setup";
 
 
 type searchProp = {

@@ -176,7 +176,7 @@
 // export default CreateP;    /// mycode
 
 import React, { useState } from "react";
-import { db } from "../../firebase/setup";
+import { db } from "../firebase/setup";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 

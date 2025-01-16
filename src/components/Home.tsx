@@ -108,7 +108,7 @@
 // export default Home;   //  done prdct displayed
 
 import React, { useState, useEffect } from "react";
-import { db } from "../../firebase/setup";
+import { db } from "../firebase/setup";
 import { collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
