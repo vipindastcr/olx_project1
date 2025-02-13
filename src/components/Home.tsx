@@ -4,6 +4,8 @@ import { db } from "../firebase/setup";
 import { collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
+
+
 const Home = () => {
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
